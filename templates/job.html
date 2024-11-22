@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="title">{% block title %} Job {{ job.job_description }} {% endblock %}</h1>
+    <div class="content">
+        <div>{{job.job_description }}</div>
+        <div><table class="table table-striped">
+        {% for source in job.sources %}
+            <tr><td>{{ source.path() }}</td></tr>
+        {% endfor %}
+        </table></div>
+        <div>{{ job.job_tool }}</div>
+        <div>{{ job.destination.path() }}</div>
+    </div>
+{% endblock %}

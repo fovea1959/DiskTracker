@@ -1,5 +1,5 @@
 import flask
-from flask import Flask, render_template, url_for, redirect
+from flask import Flask, render_template, url_for, redirect, abort
 from sqlalchemy.orm import sessionmaker
 
 import DiskTrackerDao as Dao
@@ -30,6 +30,13 @@ def index():
 def jobs():
     data = flask.g.session.query(E.Job).all()
     return render_template("jobs.html", jobs=data)
+
+@app.route('/job/<int:job_id>/')
+def job(job_id):
+    data = Dao.job_by_id(flask.g.session, job_id)
+    if data is None:
+        abort(404)
+    return render_template("job.html", job=data)
 
 
 @app.route('/<int:volume_id>/')

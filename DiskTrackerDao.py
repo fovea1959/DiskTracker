@@ -37,6 +37,12 @@ def destination_by_name_tuple(session: Session = None, names: tuple = None):
     return result
 
 
+def job_by_id(session: Session = None, job_id: int = None):
+    stmt = select(DiskTrackerEntities.Job).where(DiskTrackerEntities.Job.job_id == job_id)
+    result = session.scalars(stmt).first()
+    return result
+
+
 def job_by_name(session: Session = None, name: str = None):
     stmt = select(DiskTrackerEntities.Job).where(DiskTrackerEntities.Job.job_description == name)
     result = session.scalars(stmt).first()
