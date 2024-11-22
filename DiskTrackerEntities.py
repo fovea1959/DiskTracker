@@ -47,6 +47,9 @@ class Destination(Base):
         UniqueConstraint('destination_volume_id', 'destination_directory', name='_destination_uc'),
     )
 
+    def path(self):
+        return self.destination_volume.volume_name + self.destination_directory
+
     def __repr__(self):
         return self._repr(
             destination_id=self.destination_id,
@@ -73,6 +76,9 @@ class Source(Base):
         UniqueConstraint('source_volume_id', 'source_directory'
                                              '', name='_source_uc'),
     )
+
+    def path(self):
+        return self.source_volume.volume_name + self.source_directory
 
     def __repr__(self):
         return self._repr(

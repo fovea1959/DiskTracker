@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="title">{% block title %} Jobs {% endblock %}</h1>
+    <div class="content">
+        <table class="table table-striped">
+        {% for job in jobs %}
+            <tr>
+                <td scope="row">{{ job.job_name }}</td>
+                <td>{{ job.destination.path() }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+{% endblock %}

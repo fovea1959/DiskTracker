@@ -35,7 +35,7 @@
     "Python.app.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "/home/wegscd/PycharmProjects/DiskTracker/static"
+    "last_opened_file_path": "/home/wegscd/PycharmProjects/DiskTracker/templates"
   },
   "keyToStringList": {
     "GitStage.ChangesTree.GroupingKeys": [
@@ -47,6 +47,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/templates" />
       <recent name="$PROJECT_DIR$/static" />
     </key>
   </component>
@@ -150,13 +151,22 @@
       <option name="project" value="LOCAL" />
       <updated>1732310406333</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Bootstrap in place. Real first page.">
+      <option name="closed" value="true" />
+      <created>1732313186858</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1732313186858</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Copied from BackupTracker. Not tested." />
     <MESSAGE value="Seems to be work. Needs work around Database.py" />
     <MESSAGE value="Seems to work. Needs work around Database.py" />
-    <option name="LAST_COMMIT_MESSAGE" value="Seems to work. Needs work around Database.py" />
+    <MESSAGE value="Bootstrap in place. Real first page." />
+    <option name="LAST_COMMIT_MESSAGE" value="Bootstrap in place. Real first page." />
   </component>
 </project>
