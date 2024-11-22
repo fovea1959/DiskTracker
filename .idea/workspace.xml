@@ -34,7 +34,8 @@
     "Python.DiskTrackerEntitiesLoad.executor": "Run",
     "Python.app.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master"
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "/home/wegscd/PycharmProjects/DiskTracker/static"
   },
   "keyToStringList": {
     "GitStage.ChangesTree.GroupingKeys": [
@@ -44,6 +45,11 @@
     ]
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/static" />
+    </key>
+  </component>
   <component name="RunManager" selected="Python.app">
     <configuration name="DiskTrackerEntitiesLoad" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="DiskTracker" />
@@ -120,11 +126,37 @@
       <option name="project" value="LOCAL" />
       <updated>1732303773685</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Seems to be work. Needs work around Database.py">
+      <option name="closed" value="true" />
+      <created>1732310377313</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1732310377313</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Seems to be work. Needs work around Database.py">
+      <option name="closed" value="true" />
+      <created>1732310393522</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1732310393522</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Seems to work. Needs work around Database.py">
+      <option name="closed" value="true" />
+      <created>1732310406333</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1732310406333</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Copied from BackupTracker. Not tested." />
-    <option name="LAST_COMMIT_MESSAGE" value="Copied from BackupTracker. Not tested." />
+    <MESSAGE value="Seems to be work. Needs work around Database.py" />
+    <MESSAGE value="Seems to work. Needs work around Database.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Seems to work. Needs work around Database.py" />
   </component>
 </project>

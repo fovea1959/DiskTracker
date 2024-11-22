@@ -3,17 +3,15 @@
 {% block content %}
     <h1 class="title">{% block title %} Volumes {% endblock %}</h1>
     <div class="content">
-    {% for volume in volumes %}
-        <div class="volume">
-            <p><b>#{{ volume.volume_id }}</b></p>
-            <b>
-                <p class="name">
-                    <a href="{{ url_for('volume', volume_id=volume.volume_id)}}">
-                        {{ volume.volume_name }}
-                    </a>
-                </p>
-            </b>
-        </div>
-    {% endfor %}
+        <table class="table table-striped">
+        {% for volume in volumes %}
+            <tr>
+                <td scope="row"><a href="{{ url_for('volume', volume_id=volume.volume_id)}}">
+                    #{{ volume.volume_id }}
+                </a></td>
+                <td>{{ volume.volume_name }}</td>
+            </tr>
+        {% endfor %}
+        </table>
     </div>
 {% endblock %}

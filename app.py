@@ -1,15 +1,12 @@
-import os
-
-import sqlalchemy
 import flask
 from flask import Flask, render_template, request, url_for, redirect
 from sqlalchemy.orm import sessionmaker
 
 import DiskTrackerDao as Dao
-from DiskTrackerEntities import Volume
+import DiskTrackerEntities as E
 
-engine = sqlalchemy.create_engine('sqlite:///DiskTracker.db', echo=True)
-Session = sessionmaker(bind=engine)
+
+Session = sessionmaker(bind=Dao.engine)
 app = Flask(__name__)
 
 
@@ -23,22 +20,21 @@ def create_session():
 def shutdown_session(response_or_exc):
     print("Shutdown session", flask.g.session, type(flask.g.session))
     flask.g.session.commit()
-    # flask.g.session.remove()
 
 
 @app.route('/')
 def index():
-    volumes = Dao.volumes(flask.g.session)
+    volumes = flask.g.session.query(E.Volume).all()
     print(volumes)
     return render_template('volumes.html', volumes=volumes)
 
 
 @app.route('/<int:volume_id>/')
 def volume(volume_id):
-    volumes = Dao.volumes(flask.g.session)
+    volumes = flask.g.session.query(E.Volume).all()
     print(volumes)
     return render_template('volumes.html', volumes=volumes)
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

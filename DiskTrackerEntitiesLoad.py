@@ -6,6 +6,7 @@ import dateutil.parser
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
+import DiskTrackerDao
 import DiskTrackerEntities
 import DiskTrackerDao as Dao
 
@@ -84,8 +85,7 @@ def main(argv):
         os.remove('DiskTracker.db')
     except FileNotFoundError:
         pass
-    engine = create_engine("sqlite:///DiskTracker.db", echo=True)
-    DiskTrackerEntities.Base.metadata.create_all(engine)
+    DiskTrackerEntities.Base.metadata.create_all(DiskTrackerDao.engine)
 
     vv = set()
     ss = set()
@@ -102,7 +102,7 @@ def main(argv):
         vv.add(d1[0])
     print(vv)
 
-    with (Session(engine) as session):
+    with (Session(DiskTrackerDao.engine) as session):
 
         for v in vv:
             session.add(DiskTrackerEntities.Volume(volume_name=v))

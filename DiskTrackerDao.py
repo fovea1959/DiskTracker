@@ -3,26 +3,16 @@ import datetime
 import DiskTrackerEntities
 
 from sqlalchemy.orm import Session
-from sqlalchemy import select
+from sqlalchemy import select, create_engine
 from sqlalchemy.engine.result import ScalarResult
 
-
-def volumes(session: Session = None):
-    stmt = select(DiskTrackerEntities.Volume)
-    volumes = session.scalars(stmt)
-    return volumes
+engine = create_engine('sqlite:///DiskTracker.db', echo=True)
 
 
 def volume_by_name(session: Session = None, name: str = None):
     stmt = select(DiskTrackerEntities.Volume).where(DiskTrackerEntities.Volume.volume_name == name)
     result = session.scalars(stmt).first()
     return result
-
-
-def sources(session: Session = None):
-    stmt = select(DiskTrackerEntities.Source)
-    resources = session.scalars(stmt)
-    return resources
 
 
 def source_by_name_tuple(session: Session = None, names: tuple = None):
@@ -36,12 +26,6 @@ def source_by_name_tuple(session: Session = None, names: tuple = None):
     return result
 
 
-def destinations(session: Session = None):
-    stmt = select(DiskTrackerEntities.Destination)
-    resources = session.scalars(stmt)
-    return resources
-
-
 def destination_by_name_tuple(session: Session = None, names: tuple = None):
     v_id = volume_by_name(session, names[0]).volume_id
     stmt = select(DiskTrackerEntities.Destination).where(
@@ -50,12 +34,6 @@ def destination_by_name_tuple(session: Session = None, names: tuple = None):
         (DiskTrackerEntities.Destination.destination_directory == names[1])
     )
     result = session.scalars(stmt).first()
-    return result
-
-
-def jobs(session: Session = None) -> ScalarResult[DiskTrackerEntities.Job]:
-    stmt = select(DiskTrackerEntities.Job)
-    result = session.scalars(stmt)
     return result
 
 
