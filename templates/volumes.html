@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="title">{% block title %} Volumes {% endblock %}</h1>
+    <div class="content">
+    {% for volume in volumes %}
+        <div class="volume">
+            <p><b>#{{ volume.volume_id }}</b></p>
+            <b>
+                <p class="name">
+                    <a href="{{ url_for('volume', volume_id=volume.volume_id)}}">
+                        {{ volume.volume_name }}
+                    </a>
+                </p>
+            </b>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock %}

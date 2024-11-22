@@ -7,7 +7,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 
 import DiskTrackerEntities
-import DiskTrackerDao
+import DiskTrackerDao as Dao
 
 V_ZALMAN = r'[zalman]:'
 V_SYNOLOGY1 = r'\\synology1'
@@ -81,10 +81,10 @@ jj = {
 
 def main(argv):
     try:
-        os.remove('BackupTracker.db')
+        os.remove('DiskTracker.db')
     except FileNotFoundError:
         pass
-    engine = create_engine("sqlite:///BackupTracker.db", echo=True)
+    engine = create_engine("sqlite:///DiskTracker.db", echo=True)
     DiskTrackerEntities.Base.metadata.create_all(engine)
 
     vv = set()
@@ -103,7 +103,6 @@ def main(argv):
     print(vv)
 
     with (Session(engine) as session):
-        dao = DiskTrackerDao.DiskTrackerDao(session)
 
         for v in vv:
             session.add(DiskTrackerEntities.Volume(volume_name=v))
@@ -111,13 +110,13 @@ def main(argv):
 
         for s in ss:
             session.add(DiskTrackerEntities.Source(
-                source_volume_id=dao.volume_by_name(s[0]).volume_id,
+                source_volume_id=Dao.volume_by_name(session, s[0]).volume_id,
                 source_directory=s[1])
             )
 
         for d in dd:
             session.add(DiskTrackerEntities.Destination(
-                destination_volume_id=dao.volume_by_name(d[0]).volume_id,
+                destination_volume_id=Dao.volume_by_name(session, d[0]).volume_id,
                 destination_directory=d[1])
             )
         session.commit()
@@ -127,19 +126,19 @@ def main(argv):
             job = DiskTrackerEntities.Job(
                 job_description=k,
                 job_tool=vtuple[2],
-                destination=dao.destination_by_name_tuple(vtuple[1]),
-                sources=[dao.source_by_name_tuple(s1) for s1 in vtuple[0]]
+                destination=Dao.destination_by_name_tuple(session, vtuple[1]),
+                sources=[Dao.source_by_name_tuple(session, s1) for s1 in vtuple[0]]
             )
             session.add(job)
         session.commit()
 
         # add history
         for k, vtuple in jj.items():
-            job = dao.job_by_name(k)
+            job = Dao.job_by_name(session, k)
 
             for op, ts in vtuple[3]:
                 when = dateutil.parser.parse(ts)
-                dao.record_job(job=job, operation=op, when=when)
+                Dao.record_job(session, job=job, operation=op, when=when)
         session.commit()
 
 
