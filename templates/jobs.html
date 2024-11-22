@@ -6,7 +6,15 @@
         <table class="table table-striped">
         {% for job in jobs %}
             <tr>
-                <td scope="row">{{ job.job_name }}</td>
+                <td scope="row">{{ job.job_description }}</td>
+                <td>
+                    <table>
+                    {% for source in job.sources %}
+                        <tr><td>{{ source.path() }}</td></tr>
+                    {% endfor %}
+                    </table>
+                </td>
+                <td>{{ job.job_tool }}</td>
                 <td>{{ job.destination.path() }}</td>
             </tr>
         {% endfor %}
