@@ -1,15 +1,30 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1 class="title">{% block title %} Job {{ job.job_description }} {% endblock %}</h1>
-    <div class="content">
-        <div>{{job.job_description }}</div>
-        <div><table class="table table-striped">
-        {% for source in job.sources %}
-            <tr><td>{{ source.path() }}</td></tr>
-        {% endfor %}
-        </table></div>
-        <div>{{ job.job_tool }}</div>
-        <div>{{ job.destination.path() }}</div>
-    </div>
+    <h1 class="title">{% block title %} Job {{ job_data.job.job_description }} {% endblock %}</h1>
+    {% set job = job_data.job %}
+    <table class="table table-striped">
+        <tbody>
+            <tr>
+                <td>Description</td>
+                <td>{{ job.job_description }}</td>
+            </tr>
+            <tr>
+                <td>Tool</td>
+                <td>{{ job.job_tool }}</td>
+            </tr>
+            <tr>
+                <td>Sources</td>
+                <td>
+                    {% for source in job.sources %}
+                        <div>{{ source.path() }}</div>
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td>Destination</td>
+                <td>{{ job.destination.path() }}</td>
+            </tr>
+        </tbody>
+    </table>
 {% endblock %}

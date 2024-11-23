@@ -9,6 +9,10 @@ Session = sessionmaker(bind=Dao.engine)
 app = Flask(__name__)
 
 
+class G:
+    pass
+
+
 @app.before_request
 def create_session():
     flask.g.session = Session()
@@ -26,23 +30,40 @@ def index():
     return redirect(url_for('jobs'))
 
 
-@app.route('/jobs')
+@app.route('/jobs/')
 def jobs():
-    data = flask.g.session.query(E.Job).all()
-    return render_template("jobs.html", jobs=data)
+    data = []
+    for j in flask.g.session.query(E.Job).all():
+        g = G()
+        g.job = j
+        data.append(g)
+    return render_template("jobs.html", job_data=data)
+
 
 @app.route('/job/<int:job_id>/')
 def job(job_id):
-    data = Dao.job_by_id(flask.g.session, job_id)
-    if data is None:
+    j = Dao.job_by_id(flask.g.session, job_id)
+    if j is None:
         abort(404)
-    return render_template("job.html", job=data)
+    data = G()
+    data.job = j
+    return render_template("job.html", job_data=data)
 
 
-@app.route('/<int:volume_id>/')
+@app.route('/volumes/')
+def volumes():
+    data = []
+    for v in flask.g.session.query(E.Volume).all():
+        g = G()
+        g.volume = v
+        data.append(g)
+    return render_template('volumes.html', volume_data=data)
+
+
+@app.route('/volume/<int:volume_id>/')
 def volume(volume_id):
     data = flask.g.session.query(E.Volume).all()
-    return render_template('volumes.html', volumes=data)
+    return render_template('volume.html', volumes=data)
 
 
 if __name__ == '__main__':

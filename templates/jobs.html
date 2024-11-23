@@ -2,22 +2,35 @@
 
 {% block content %}
     <h1 class="title">{% block title %} Jobs {% endblock %}</h1>
-    <div class="content">
+    <div>
         <table class="table table-striped">
-        {% for job in jobs %}
-            <tr>
-                <td scope="row">{{ job.job_description }}</td>
-                <td>
-                    <table>
-                    {% for source in job.sources %}
-                        <tr><td>{{ source.path() }}</td></tr>
-                    {% endfor %}
-                    </table>
-                </td>
-                <td>{{ job.job_tool }}</td>
-                <td>{{ job.destination.path() }}</td>
-            </tr>
-        {% endfor %}
+            <thead><tr>
+                <td>Description</td>
+                <td>Sources
+                <td>Tool</td>
+                <td>Destination</td>
+            </tr></thead>
+            <tbody class="table-group-divider">
+            {% for g in job_data %}
+                {% set job = g.job %}
+                <tr>
+                    <td scope="row">
+                        <a href="{{ url_for('job', job_id=job.job_id)}}">
+                            {{ job.job_description }}
+                        </a>
+                    </td>
+                    <td>
+                        <table>
+                        {% for source in job.sources %}
+                            <tr><td>{{ source.path() }}</td></tr>
+                        {% endfor %}
+                        </table>
+                    </td>
+                    <td>{{ job.job_tool }}</td>
+                    <td>{{ job.destination.path() }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
         </table>
     </div>
 {% endblock %}
