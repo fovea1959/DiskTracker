@@ -1,7 +1,14 @@
+from datetime import datetime
+
 import flask
-from flask import Flask, render_template, url_for, redirect, abort
+from flask import Flask, render_template, url_for, redirect, request, flash
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.exc import NoResultFound
+from werkzeug.datastructures import MultiDict
+
+from wtforms import Form, validators
+from wtforms.fields.simple import PasswordField, BooleanField
+from wtforms_components import DateTimeField, DateRange, StringField
 
 import DiskTrackerDao as Dao
 import DiskTrackerEntities as E
@@ -72,5 +79,27 @@ def volume(volume_id):
     return render_template('volume.html', volume_data=data)
 
 
+class TestForm(Form):
+    username = StringField('Username', [validators.Length(min=4, max=25)])
+    email = StringField('Email Address', [validators.Length(min=6, max=35)])
+    password = PasswordField('New Password', [
+        validators.DataRequired(),
+        validators.EqualTo('confirm', message='Passwords must match')
+    ])
+    confirm = PasswordField('Repeat Password')
+    accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
+
+
+@app.route('/form_test/', methods=['GET', 'POST'])
+def form_test():
+    form = TestForm(request.form)
+    if request.method == 'POST' and form.validate():
+        flash('Thanks for registering')
+        return redirect(url_for('form_test'))
+    return render_template('form_test.html', form=form)
+
+
+
 if __name__ == '__main__':
+    app.secret_key = 'super secret key'
     app.run(debug=True)
