@@ -88,6 +88,13 @@ class TestForm(Form):
     ])
     confirm = PasswordField('Repeat Password')
     accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
+    date_field = DateTimeField(
+        'Date',
+        validators=[DateRange(
+            min=datetime(2000, 1, 1),
+            max=datetime(2000, 10, 10)
+        )]
+    )
 
 
 @app.route('/form_test/', methods=['GET', 'POST'])
