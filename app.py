@@ -1,6 +1,7 @@
 import flask
 from flask import Flask, render_template, url_for, redirect, abort
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm.exc import NoResultFound
 
 import DiskTrackerDao as Dao
 import DiskTrackerEntities as E
@@ -10,7 +11,12 @@ app = Flask(__name__)
 
 
 class G:
-    pass
+    def __init__(self, *initial_data, **kwargs):
+        for dictionary in initial_data:
+            for key in dictionary:
+                setattr(self, key, dictionary[key])
+        for key in kwargs:
+            setattr(self, key, kwargs[key])
 
 
 @app.before_request
@@ -25,6 +31,11 @@ def shutdown_session(response_or_exc):
     flask.g.session.commit()
 
 
+@app.errorhandler(NoResultFound)
+def no_result_found_handler(error):
+    return render_template('404.html'), 404
+
+
 @app.route('/')
 def index():
     return redirect(url_for('jobs'))
@@ -34,8 +45,7 @@ def index():
 def jobs():
     data = []
     for j in flask.g.session.query(E.Job).all():
-        g = G()
-        g.job = j
+        g = G(job=j)
         data.append(g)
     return render_template("jobs.html", job_data=data)
 
@@ -43,10 +53,7 @@ def jobs():
 @app.route('/job/<int:job_id>/')
 def job(job_id):
     j = Dao.job_by_id(flask.g.session, job_id)
-    if j is None:
-        abort(404)
-    data = G()
-    data.job = j
+    data = G(job=j)
     return render_template("job.html", job_data=data)
 
 
@@ -54,16 +61,15 @@ def job(job_id):
 def volumes():
     data = []
     for v in flask.g.session.query(E.Volume).all():
-        g = G()
-        g.volume = v
+        g = G(volume=v)
         data.append(g)
     return render_template('volumes.html', volume_data=data)
 
 
 @app.route('/volume/<int:volume_id>/')
 def volume(volume_id):
-    data = flask.g.session.query(E.Volume).all()
-    return render_template('volume.html', volumes=data)
+    data = G(volume=Dao.volume_by_id(flask.g.session, volume_id))
+    return render_template('volume.html', volume_data=data)
 
 
 if __name__ == '__main__':

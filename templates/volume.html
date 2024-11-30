@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="title">{% block title %}Volume {{ volume_data.volume.volume_name }}{% endblock %}</h1>
+    {% set volume=volume_data.volume %}
+    <div>
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td>Model</td>
+                    <td>{{ volume.model|default("", True) }}</td>
+                </tr>
+                <tr>
+                    <td>Serial</td>
+                    <td>{{ volume.serial|default("", True) }}</td>
+                </tr>
+                <tr>
+                    <td>Capacity</td>
+                    <td>{{ volume.capacity|default("", True) }}</td>
+                </tr>
+                <tr>
+                    <td>Use</td>
+                    <td>{{ volume.use|default("", True) }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

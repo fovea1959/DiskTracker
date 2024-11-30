@@ -3,7 +3,7 @@ import typing
 
 import sqlalchemy.orm.exc
 
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy import Integer, Text, DateTime, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, mapped_column, relationship
@@ -32,6 +32,10 @@ class Volume(Base):
 
     volume_id: Mapped[int] = mapped_column(Integer, primary_key=True)
     volume_name: Mapped[str] = mapped_column(Text, unique=True)
+    model: Mapped[Optional[str]] = mapped_column(Text)
+    serial: Mapped[Optional[str]] = mapped_column(Text)
+    capacity: Mapped[Optional[int]] = mapped_column(Integer)
+    use: Mapped[Optional[str]] = mapped_column(Text)
 
 
 class Destination(Base):
@@ -107,8 +111,9 @@ class Job(Base):
     __tablename__ = 'jobs'
 
     job_id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    job_name: Mapped[str] = mapped_column(Text, unique=True)
     job_tool: Mapped[str] = mapped_column(Text, nullable=False)
-    job_description: Mapped[str] = mapped_column(Text)
+    job_description: Mapped[Optional[str]] = mapped_column(Text)
 
     destination_id: Mapped[int] = mapped_column(ForeignKey("destinations.destination_id"))
     destination: Mapped["Destination"] = relationship()
@@ -129,10 +134,12 @@ class History(Base):
     job_id: Mapped[int] = mapped_column(ForeignKey("jobs.job_id"))
     job: Mapped["Job"] = relationship()
 
+    job_name: Mapped[str] = mapped_column(Text)
     job_tool: Mapped[str] = mapped_column(Text, nullable=False)
-    job_description: Mapped[str] = mapped_column(Text)
+    job_description: Mapped[Optional[str]] = mapped_column(Text)
     when: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False)
     operation: Mapped[str] = mapped_column(Text)
+    comment: Mapped[str] = mapped_column(Text)
 
     destination_id: Mapped[int] = mapped_column(ForeignKey("destinations.destination_id"))
     destination: Mapped["Destination"] = relationship()

@@ -124,7 +124,7 @@ def main(argv):
         # add jobs
         for k, vtuple in jj.items():
             job = DiskTrackerEntities.Job(
-                job_description=k,
+                job_name=k,
                 job_tool=vtuple[2],
                 destination=Dao.destination_by_name_tuple(session, vtuple[1]),
                 sources=[Dao.source_by_name_tuple(session, s1) for s1 in vtuple[0]]
@@ -135,10 +135,11 @@ def main(argv):
         # add history
         for k, vtuple in jj.items():
             job = Dao.job_by_name(session, k)
+            print('job', job)
 
             for op, ts in vtuple[3]:
                 when = dateutil.parser.parse(ts)
-                Dao.record_job(session, job=job, operation=op, when=when)
+                Dao.record_job(session, job=job, operation=op, when=when, comment="")
         session.commit()
 
 
