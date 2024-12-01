@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select, create_engine
 from sqlalchemy.engine.result import ScalarResult
 
-engine = create_engine('sqlite:///DiskTracker.db', echo=True)
+engine = create_engine('sqlite:///DiskTracker.db', echo=False)
 
 
 def volume_by_id(session: Session = None, volume_id: int = None) -> Volume:

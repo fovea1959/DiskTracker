@@ -1,4 +1,6 @@
+import sys
 from datetime import datetime
+import logging
 
 import flask
 from flask import Flask, render_template, url_for, redirect, request, flash
@@ -7,8 +9,9 @@ from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.datastructures import MultiDict
 
 from wtforms import Form, validators
-from wtforms.fields.simple import PasswordField, BooleanField
-from wtforms_components import DateTimeField, DateRange, StringField
+from wtforms.fields.numeric import IntegerField
+from wtforms.fields.simple import PasswordField, BooleanField, StringField, HiddenField
+from wtforms_components import DateTimeField, DateRange
 
 import DiskTrackerDao as Dao
 import DiskTrackerEntities as E
@@ -26,16 +29,22 @@ class G:
             setattr(self, key, kwargs[key])
 
 
-@app.before_request
-def create_session():
-    flask.g.session = Session()
-    print("Made session", flask.g.session)
+def get_session():
+    # https://flask.palletsprojects.com/en/stable/appcontext/#storing-data
+    if 'db' not in flask.g:
+        flask.g.db = Session()
+        logging.info("Made session %s %s", flask.g.db, type(flask.g.db))
+
+    return flask.g.db
 
 
 @app.teardown_appcontext
 def shutdown_session(response_or_exc):
-    print("Shutdown session", flask.g.session, type(flask.g.session))
-    flask.g.session.commit()
+    db = flask.g.pop('db', None)
+
+    if db is not None:
+        logging.info("Commiting session %s %s", db, type(db))
+        db.commit()
 
 
 @app.errorhandler(NoResultFound)
@@ -45,13 +54,13 @@ def no_result_found_handler(error):
 
 @app.route('/')
 def index():
-    return redirect(url_for('jobs'))
+    return redirect(url_for('volumes'))
 
 
 @app.route('/jobs/')
 def jobs():
     data = []
-    for j in flask.g.session.query(E.Job).all():
+    for j in get_session().query(E.Job).all():
         g = G(job=j)
         data.append(g)
     return render_template("jobs.html", job_data=data)
@@ -59,7 +68,7 @@ def jobs():
 
 @app.route('/job/<int:job_id>/')
 def job(job_id):
-    j = Dao.job_by_id(flask.g.session, job_id)
+    j = Dao.job_by_id(get_session(), job_id)
     data = G(job=j)
     return render_template("job.html", job_data=data)
 
@@ -67,7 +76,7 @@ def job(job_id):
 @app.route('/volumes/')
 def volumes():
     data = []
-    for v in flask.g.session.query(E.Volume).all():
+    for v in get_session().query(E.Volume).all():
         g = G(volume=v)
         data.append(g)
     return render_template('volumes.html', volume_data=data)
@@ -75,8 +84,32 @@ def volumes():
 
 @app.route('/volume/<int:volume_id>/')
 def volume(volume_id):
-    data = G(volume=Dao.volume_by_id(flask.g.session, volume_id))
+    data = G(volume=Dao.volume_by_id(get_session(), volume_id))
     return render_template('volume.html', volume_data=data)
+
+
+class VolumeForm(Form):
+    volume_id = HiddenField("Volume Id", [validators.DataRequired])
+    volume_name = StringField("Volume name", [validators.DataRequired])
+    model = StringField("Disk Model")
+    serial = StringField("Serial #")
+    capacity = IntegerField("Capacity")
+    use = StringField("Use")
+
+
+@app.route('/volume_edit/<int:volume_id>/', methods=['GET', 'POST'])
+def volume_edit_test(volume_id):
+    if request.method == 'POST':
+        form = VolumeForm(request.form)
+        if form.validate():
+            flash('Saved!')
+            return redirect(url_for('form_test'))
+        else:
+            pass
+    else:  # GET
+        volume = Dao.volume_by_id(get_session(), volume_id)
+        form = VolumeForm(MultiDict([('date_field', '2024-01-01 15:00:00')]))
+    return render_template('volume_edit.html', form=form)
 
 
 class TestForm(Form):
@@ -99,14 +132,53 @@ class TestForm(Form):
 
 @app.route('/form_test/', methods=['GET', 'POST'])
 def form_test():
-    form = TestForm(request.form)
-    if request.method == 'POST' and form.validate():
-        flash('Thanks for registering')
-        return redirect(url_for('form_test'))
+    if request.method == 'POST':
+        form = TestForm(request.form)
+        if form.validate():
+            flash('Saved!')
+            return redirect(url_for('form_test'))
+        else:
+            pass
+    else:
+        form = TestForm(MultiDict([('date_field', '2024-01-01 15:00:00')]))
     return render_template('form_test.html', form=form)
 
 
-
-if __name__ == '__main__':
+def main():
     app.secret_key = 'super secret key'
     app.run(debug=True)
+
+
+class CustomLogFormatter(logging.Formatter):
+    # derived from https://stackoverflow.com/a/71336115
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name_cache = {}
+
+    def format(self, record):
+        saved_name = record.name  # save and restore for other formatters if desired
+        abbrev = self.name_cache.get(saved_name, None)
+        if abbrev is None:
+            parts = saved_name.split('.')
+            if len(parts) > 1:
+                abbrev = '.'.join(p[0] for p in parts[:-1])
+                abbrev = '.'.join((abbrev, parts[-1]))
+            else:
+                abbrev = saved_name
+            self.name_cache[saved_name] = abbrev
+        record.name = abbrev
+        result = super().format(record)
+        return result
+
+
+if __name__ == '__main__':
+    h = logging.StreamHandler(stream=sys.stderr)
+    f = CustomLogFormatter("%(asctime)s %(levelname)-8s %(name)-20s %(message)s")
+    h.setFormatter(f)
+    root = logging.getLogger()
+    root.addHandler(h)
+    root.setLevel(logging.INFO)
+
+    logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
+    logging.getLogger("sqlalchemy.pool").setLevel(logging.DEBUG)
+    main()
