@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1 class="title">{% block title %}Destinations{% endblock %}</h1>
+  <div>
+    <table class="table table-striped">
+      <thead><tr>
+        <td>Path</td>
+        <td>Description</td>
+      </tr></thead>
+      <tbody>
+      {% for g in destination_data %}
+        {% set destination = g.destination %}
+        <tr>
+          <td scope="row"><a href="{{ url_for('destination', destination_id=destination.destination_id)}}">
+            {{ destination.path }}
+          </a></td>
+          <td>{{ destination.destination_description|default("", True) }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

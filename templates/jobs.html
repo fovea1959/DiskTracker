@@ -22,12 +22,12 @@
           <td>
             <table>
               {% for source in job.sources %}
-              <tr><td>{{ source.path() }}</td></tr>
+              <tr><td>{{ source.path }}</td></tr>
               {% endfor %}
             </table>
           </td>
           <td>{{ job.job_tool }}</td>
-          <td>{{ job.destination.path() }}</td>
+          <td>{{ job.destination.path }}</td>
         </tr>
       {% endfor %}
       </tbody>

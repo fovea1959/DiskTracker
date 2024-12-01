@@ -44,6 +44,7 @@ class Destination(Base):
     destination_id: Mapped[int] = mapped_column(Integer, primary_key=True)
     destination_volume_id: Mapped[int] = mapped_column(ForeignKey("volumes.volume_id"))
     destination_directory: Mapped[str] = mapped_column(Text)
+    destination_description: Mapped[Optional[str]] = mapped_column(Text)
 
     destination_volume: Mapped["Volume"] = relationship()
 
@@ -51,13 +52,15 @@ class Destination(Base):
         UniqueConstraint('destination_volume_id', 'destination_directory', name='_destination_uc'),
     )
 
+    @property
     def path(self):
+        """Volume name + source_directory."""
         return self.destination_volume.volume_name + self.destination_directory
 
     def __repr__(self):
         return self._repr(
             destination_id=self.destination_id,
-            path=self.destination_volume.volume_name + self.destination_directory
+            path=self.path
         )
 
 
@@ -73,21 +76,23 @@ class Source(Base):
     source_id: Mapped[int] = mapped_column(Integer, primary_key=True)
     source_volume_id: Mapped[int] = mapped_column(ForeignKey("volumes.volume_id"))
     source_directory: Mapped[str] = mapped_column(Text)
+    source_description: Mapped[Optional[str]] = mapped_column(Text)
 
     source_volume: Mapped["Volume"] = relationship()
 
     __table_args__ = (
-        UniqueConstraint('source_volume_id', 'source_directory'
-                                             '', name='_source_uc'),
+        UniqueConstraint('source_volume_id', 'source_directory', name='_source_uc'),
     )
 
+    @property
     def path(self):
+        """Volume name + source_directory."""
         return self.source_volume.volume_name + self.source_directory
 
     def __repr__(self):
         return self._repr(
             source_id=self.source_id,
-            path=self.source_volume.volume_name + self.source_directory
+            path=self.path
         )
 
     # many-to-many relationship to Job, bypassing the `JobSourceAssociation` class

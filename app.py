@@ -75,6 +75,36 @@ def job(job_id):
     return render_template("job.html", job_data=data)
 
 
+@app.route('/destinations/')
+def destinations():
+    data = []
+    for v in get_db_session().query(E.Destination).all():
+        g = G(destination=v)
+        data.append(g)
+    return render_template('destinations.html', destination_data=data)
+
+
+@app.route('/destination/<int:destination_id>/')
+def destination(destination_id):
+    data = G(destination=Dao.destination_by_id(get_db_session(), destination_id))
+    return render_template('destination.html', destination_data=data)
+
+
+@app.route('/sources/')
+def sources():
+    data = []
+    for v in get_db_session().query(E.Source).all():
+        g = G(source=v)
+        data.append(g)
+    return render_template('sources.html', source_data=data)
+
+
+@app.route('/source/<int:source_id>/')
+def source(source_id):
+    data = G(source=Dao.source_by_id(get_db_session(), source_id))
+    return render_template('source.html', source_data=data)
+
+
 @app.route('/volumes/')
 def volumes():
     data = []
@@ -106,6 +136,7 @@ def volume_edit_test(volume_id):
     s = get_db_session()
     v = Dao.volume_by_id(s, volume_id)
     if request.method == 'POST':
+        # https://wtforms-alchemy.readthedocs.io/en/latest/validators.html#using-unique-validator-with-existing-objects
         form = VolumeForm(request.form, obj=v)
         if form.validate():
             form.populate_obj(v)
@@ -117,38 +148,6 @@ def volume_edit_test(volume_id):
         form = VolumeForm(obj=v)
         logging.info("made Volume form: %r", form)
     return render_template('volume_edit.html', form=form)
-
-
-class TestForm(Form):
-    username = StringField('Username', [validators.Length(min=4, max=25)])
-    email = StringField('Email Address', [validators.Length(min=6, max=35)])
-    password = PasswordField('New Password', [
-        validators.DataRequired(),
-        validators.EqualTo('confirm', message='Passwords must match')
-    ])
-    confirm = PasswordField('Repeat Password')
-    accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
-    date_field = DateTimeField(
-        'Date',
-        validators=[DateRange(
-            min=datetime(2000, 1, 1),
-            max=datetime(2000, 10, 10)
-        )]
-    )
-
-
-@app.route('/form_test/', methods=['GET', 'POST'])
-def form_test():
-    if request.method == 'POST':
-        form = TestForm(request.form)
-        if form.validate():
-            flash('Saved!')
-            return redirect(url_for('form_test'))
-        else:
-            pass
-    else:
-        form = TestForm(MultiDict([('date_field', '2024-01-01 15:00:00')]))
-    return render_template('form_test.html', form=form)
 
 
 def main():

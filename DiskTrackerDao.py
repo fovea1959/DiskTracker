@@ -19,6 +19,12 @@ def volume_by_name(session: Session = None, volume_name: str = None) -> Volume:
     return result
 
 
+def source_by_id(session: Session = None, source_id: int = None) -> Source:
+    stmt = select(Source).where(Source.source_id == source_id)
+    result = session.scalars(stmt).one()
+    return result
+
+
 def source_by_name_tuple(session: Session = None, names: tuple = None) -> Source:
     v_id = volume_by_name(session, names[0]).volume_id
     stmt = select(Source).where(
@@ -26,6 +32,12 @@ def source_by_name_tuple(session: Session = None, names: tuple = None) -> Source
         &
         (Source.source_directory == names[1])
     )
+    result = session.scalars(stmt).one()
+    return result
+
+
+def destination_by_id(session: Session = None, destination_id: int = None) -> Destination:
+    stmt = select(Destination).where(Destination.destination_id == destination_id)
     result = session.scalars(stmt).one()
     return result
 
