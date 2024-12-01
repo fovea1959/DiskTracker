@@ -4,14 +4,12 @@
   <h1 class="title">{% block title %}Edit Volume{% endblock %}</h1>
   {% from "_formhelpers.html" import render_field %}
   <form method=post>
-    {{ render_field(form.username) }}
+    {{ render_field(form.volume_name) }}
     <dl>
-      {{ render_field(form.username) }}
-      {{ render_field(form.email) }}
-      {{ render_field(form.password) }}
-      {{ render_field(form.confirm) }}
-      {{ render_field(form.accept_tos) }}
-      {{ render_field(form.date_field) }}
+      {{ render_field(form.volume_model) }}
+      {{ render_field(form.volume_serial) }}
+      {{ render_field(form.volume_capacity) }}
+      {{ render_field(form.volume_use) }}
     </dl>
     <input type=submit>
   </form>

@@ -6,13 +6,13 @@
   <div>
     <dl>
       <dt>Model:</dt>
-      <dd>{{ volume.model|default("", True) }}</dd>
+      <dd>{{ volume.volume_model|default("", True) }}</dd>
       <dt>Serial:</dt>
-      <dd>{{ volume.serial|default("", True) }}</dd>
+      <dd>{{ volume.volume_serial|default("", True) }}</dd>
       <dt>Capacity:</dt>
-      <dd>{{ volume.capacity|default("", True) }}</dd>
+      <dd>{{ volume.volume_capacity|default("", True) }}</dd>
       <dt>Use:</dt>
-      <dd>{{ volume.use|default("", True) }}</dd>
+      <dd>{{ volume.volume_use|default("", True) }}</dd>
     </dl>
   </div>
   <div>

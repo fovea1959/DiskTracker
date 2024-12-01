@@ -5,17 +5,19 @@
   <div>
     <table class="table table-striped">
       <thead><tr>
-        <td>Id</td>
         <td>Name</td>
+        <td>Capacity</td>
+        <td>Use</td>
       </tr></thead>
       <tbody>
       {% for g in volume_data %}
         {% set volume = g.volume %}
         <tr>
           <td scope="row"><a href="{{ url_for('volume', volume_id=volume.volume_id)}}">
-            {{ volume.volume_id }}
+            {{ volume.volume_name }}
           </a></td>
-          <td>{{ volume.volume_name }}</td>
+          <td>{{ volume.volume_capacity|default("", True) }}</td>
+          <td>{{ volume.volume_use|default("", True) }}</td>
         </tr>
       {% endfor %}
       </tbody>

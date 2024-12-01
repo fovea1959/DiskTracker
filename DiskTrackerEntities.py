@@ -32,10 +32,10 @@ class Volume(Base):
 
     volume_id: Mapped[int] = mapped_column(Integer, primary_key=True)
     volume_name: Mapped[str] = mapped_column(Text, unique=True)
-    model: Mapped[Optional[str]] = mapped_column(Text)
-    serial: Mapped[Optional[str]] = mapped_column(Text)
-    capacity: Mapped[Optional[int]] = mapped_column(Integer)
-    use: Mapped[Optional[str]] = mapped_column(Text)
+    volume_model: Mapped[Optional[str]] = mapped_column(Text)
+    volume_serial: Mapped[Optional[str]] = mapped_column(Text)
+    volume_capacity: Mapped[Optional[int]] = mapped_column(Integer)
+    volume_use: Mapped[Optional[str]] = mapped_column(Text)
 
 
 class Destination(Base):

@@ -11,9 +11,11 @@ from werkzeug.datastructures import MultiDict
 from wtforms import Form, validators
 from wtforms.fields.numeric import IntegerField
 from wtforms.fields.simple import PasswordField, BooleanField, StringField, HiddenField
+from wtforms_alchemy import ModelForm
 from wtforms_components import DateTimeField, DateRange
 
 import DiskTrackerDao as Dao
+import DiskTrackerEntities
 import DiskTrackerEntities as E
 
 Session = sessionmaker(bind=Dao.engine)
@@ -29,7 +31,7 @@ class G:
             setattr(self, key, kwargs[key])
 
 
-def get_session():
+def get_db_session():
     # https://flask.palletsprojects.com/en/stable/appcontext/#storing-data
     if 'db' not in flask.g:
         flask.g.db = Session()
@@ -60,7 +62,7 @@ def index():
 @app.route('/jobs/')
 def jobs():
     data = []
-    for j in get_session().query(E.Job).all():
+    for j in get_db_session().query(E.Job).all():
         g = G(job=j)
         data.append(g)
     return render_template("jobs.html", job_data=data)
@@ -68,7 +70,7 @@ def jobs():
 
 @app.route('/job/<int:job_id>/')
 def job(job_id):
-    j = Dao.job_by_id(get_session(), job_id)
+    j = Dao.job_by_id(get_db_session(), job_id)
     data = G(job=j)
     return render_template("job.html", job_data=data)
 
@@ -76,7 +78,7 @@ def job(job_id):
 @app.route('/volumes/')
 def volumes():
     data = []
-    for v in get_session().query(E.Volume).all():
+    for v in get_db_session().query(E.Volume).all():
         g = G(volume=v)
         data.append(g)
     return render_template('volumes.html', volume_data=data)
@@ -84,31 +86,36 @@ def volumes():
 
 @app.route('/volume/<int:volume_id>/')
 def volume(volume_id):
-    data = G(volume=Dao.volume_by_id(get_session(), volume_id))
+    data = G(volume=Dao.volume_by_id(get_db_session(), volume_id))
     return render_template('volume.html', volume_data=data)
 
 
-class VolumeForm(Form):
-    volume_id = HiddenField("Volume Id", [validators.DataRequired])
-    volume_name = StringField("Volume name", [validators.DataRequired])
-    model = StringField("Disk Model")
-    serial = StringField("Serial #")
-    capacity = IntegerField("Capacity")
-    use = StringField("Use")
+class MyModelForm(ModelForm):
+    # https://stackoverflow.com/a/22354293
+    def get_session():
+        return get_db_session()
+
+
+class VolumeForm(MyModelForm):
+    class Meta:
+        model = DiskTrackerEntities.Volume
 
 
 @app.route('/volume_edit/<int:volume_id>/', methods=['GET', 'POST'])
 def volume_edit_test(volume_id):
+    s = get_db_session()
+    v = Dao.volume_by_id(s, volume_id)
     if request.method == 'POST':
-        form = VolumeForm(request.form)
+        form = VolumeForm(request.form, obj=v)
         if form.validate():
+            form.populate_obj(v)
             flash('Saved!')
-            return redirect(url_for('form_test'))
+            return redirect(url_for('volumes'))
         else:
             pass
     else:  # GET
-        volume = Dao.volume_by_id(get_session(), volume_id)
-        form = VolumeForm(MultiDict([('date_field', '2024-01-01 15:00:00')]))
+        form = VolumeForm(obj=v)
+        logging.info("made Volume form: %r", form)
     return render_template('volume_edit.html', form=form)
 
 
@@ -178,7 +185,8 @@ if __name__ == '__main__':
     root = logging.getLogger()
     root.addHandler(h)
     root.setLevel(logging.INFO)
+    # need to look at https://stackoverflow.com/a/73094988 to handle access logs
 
     logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
-    logging.getLogger("sqlalchemy.pool").setLevel(logging.DEBUG)
+    logging.getLogger("sqlalchemy.pool").setLevel(logging.INFO)
     main()

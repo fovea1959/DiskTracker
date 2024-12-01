@@ -18,11 +18,17 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="Fiddle-SQLAlchemy" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2pDaKGXwsejmZDsEcOMfvhl9Jb5" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -33,7 +39,9 @@
   "keyToString": {
     "Python.DiskTrackerEntitiesLoad.executor": "Run",
     "Python.app.executor": "Run",
+    "Python.form_test.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "master",
     "last_opened_file_path": "/home/wegscd/PycharmProjects/DiskTracker/templates"
   },
@@ -96,10 +104,35 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="form_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="DiskTracker" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/form_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Python.app" />
         <item itemvalue="Python.DiskTrackerEntitiesLoad" />
+        <item itemvalue="Python.form_test" />
+        <item itemvalue="Python.DiskTrackerEntitiesLoad" />
+        <item itemvalue="Python.app" />
       </list>
     </recent_temporary>
   </component>
@@ -183,7 +216,55 @@
       <option name="project" value="LOCAL" />
       <updated>1732315969281</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Error handling. Work on volume CRUD.">
+      <option name="closed" value="true" />
+      <created>1732994412664</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1732994412664</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Working on forms.">
+      <option name="closed" value="true" />
+      <created>1732999464974</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1732999464974</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Validator works.">
+      <option name="closed" value="true" />
+      <created>1733003697537</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1733003697537</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Indents.">
+      <option name="closed" value="true" />
+      <created>1733072078295</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1733072078295</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Logging, forms.">
+      <option name="closed" value="true" />
+      <created>1733077544169</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1733077544169</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Logging, forms.">
+      <option name="closed" value="true" />
+      <created>1733077571537</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1733077571537</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -193,6 +274,11 @@
     <MESSAGE value="Bootstrap in place. Real first page." />
     <MESSAGE value="We can see jobs." />
     <MESSAGE value="We can look at one job." />
-    <option name="LAST_COMMIT_MESSAGE" value="We can look at one job." />
+    <MESSAGE value="Error handling. Work on volume CRUD." />
+    <MESSAGE value="Working on forms." />
+    <MESSAGE value="Validator works." />
+    <MESSAGE value="Indents." />
+    <MESSAGE value="Logging, forms." />
+    <option name="LAST_COMMIT_MESSAGE" value="Logging, forms." />
   </component>
 </project>
