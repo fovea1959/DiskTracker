@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1 class="title">{% block title %}Form Test{% endblock %}</h1>
+  <h1 class="title">{% block title %}Edit Volume{% endblock %}</h1>
   {% from "_formhelpers.html" import render_field %}
   <form method=post>
+    {{ render_field(form.username) }}
     <dl>
       {{ render_field(form.username) }}
       {{ render_field(form.email) }}
@@ -12,6 +13,6 @@
       {{ render_field(form.accept_tos) }}
       {{ render_field(form.date_field) }}
     </dl>
-    <p><input type=submit value=Register>
+    <input type=submit>
   </form>
 {% endblock %}

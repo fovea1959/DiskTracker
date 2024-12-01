@@ -1,28 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1 class="title">{% block title %}Volume {{ volume_data.volume.volume_name }}{% endblock %}</h1>
-    {% set volume=volume_data.volume %}
-    <div>
-        <table class="table table-striped">
-            <tbody>
-                <tr>
-                    <td>Model</td>
-                    <td>{{ volume.model|default("", True) }}</td>
-                </tr>
-                <tr>
-                    <td>Serial</td>
-                    <td>{{ volume.serial|default("", True) }}</td>
-                </tr>
-                <tr>
-                    <td>Capacity</td>
-                    <td>{{ volume.capacity|default("", True) }}</td>
-                </tr>
-                <tr>
-                    <td>Use</td>
-                    <td>{{ volume.use|default("", True) }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <h1 class="title">{% block title %}Volume {{ volume_data.volume.volume_name }}{% endblock %}</h1>
+  {% set volume=volume_data.volume %}
+  <div>
+    <dl>
+      <dt>Model:</dt>
+      <dd>{{ volume.model|default("", True) }}</dd>
+      <dt>Serial:</dt>
+      <dd>{{ volume.serial|default("", True) }}</dd>
+      <dt>Capacity:</dt>
+      <dd>{{ volume.capacity|default("", True) }}</dd>
+      <dt>Use:</dt>
+      <dd>{{ volume.use|default("", True) }}</dd>
+    </dl>
+  </div>
+  <div>
+    <a href="/volume_edit/{{ volume.volume_id }}">Edit</a>
+  </div>
 {% endblock %}

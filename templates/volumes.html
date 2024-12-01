@@ -1,32 +1,32 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1 class="title">{% block title %} Volumes {% endblock %}</h1>
-    <div>
-        <table class="table table-striped">
-            <thead><tr>
-                <td>Id</td>
-                <td>Name</td>
-            </tr></thead>
-            <tbody>
-            {% for g in volume_data %}
-                {% set volume = g.volume %}
-                <tr>
-                    <td scope="row"><a href="{{ url_for('volume', volume_id=volume.volume_id)}}">
-                        {{ volume.volume_id }}
-                    </a></td>
-                    <td>{{ volume.volume_name }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+  <h1 class="title">{% block title %} Volumes {% endblock %}</h1>
+  <div>
+    <table class="table table-striped">
+      <thead><tr>
+        <td>Id</td>
+        <td>Name</td>
+      </tr></thead>
+      <tbody>
+      {% for g in volume_data %}
+        {% set volume = g.volume %}
+        <tr>
+          <td scope="row"><a href="{{ url_for('volume', volume_id=volume.volume_id)}}">
+            {{ volume.volume_id }}
+          </a></td>
+          <td>{{ volume.volume_name }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {% endblock %}
 
 {% block script %}
-    <script>
-    $( document ).ready(function() {
-        alert("loaded");
-    });
-    </script>
+<script>
+  $( document ).ready(function() {
+    alert("loaded");
+  });
+</script>
 {% endblock %}
