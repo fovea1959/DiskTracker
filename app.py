@@ -15,7 +15,6 @@ from wtforms_alchemy import ModelForm
 from wtforms_components import DateTimeField, DateRange
 
 import DiskTrackerDao as Dao
-import DiskTrackerEntities
 import DiskTrackerEntities as E
 
 Session = sessionmaker(bind=Dao.engine)
@@ -52,6 +51,13 @@ def shutdown_session(response_or_exc):
 @app.errorhandler(NoResultFound)
 def no_result_found_handler(error):
     return render_template('404.html'), 404
+
+
+class MyModelForm(ModelForm):
+    # https://stackoverflow.com/a/22354293
+    @staticmethod
+    def get_session():
+        return get_db_session()
 
 
 @app.route('/')
@@ -120,19 +126,30 @@ def volume(volume_id):
     return render_template('volume.html', volume_data=data)
 
 
-class MyModelForm(ModelForm):
-    # https://stackoverflow.com/a/22354293
-    def get_session():
-        return get_db_session()
-
-
 class VolumeForm(MyModelForm):
     class Meta:
-        model = DiskTrackerEntities.Volume
+        model = E.Volume
+
+
+@app.route('/volume_add/', methods=['GET', 'POST'])
+def volume_add():
+    if request.method == 'POST':
+        form = VolumeForm(request.form)
+        if form.validate():
+            v = E.Volume()
+            form.populate_obj(v)
+            get_db_session().add(v)
+            flash(f'{v.volume_name} saved!')
+            return redirect(url_for('volumes'))
+        else:
+            pass
+    else:  # GET
+        form = VolumeForm()
+    return render_template('volume_add.html', form=form)
 
 
 @app.route('/volume_edit/<int:volume_id>/', methods=['GET', 'POST'])
-def volume_edit_test(volume_id):
+def volume_edit(volume_id):
     s = get_db_session()
     v = Dao.volume_by_id(s, volume_id)
     if request.method == 'POST':
