@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %} {% endblock %} - DiskTracker</title>
+    <title>DiskTracker: {% block title %}{% endblock %}</title>
     <link href="/static/bootstrap.css" rel="stylesheet">
   </head>
   <body>
@@ -31,8 +31,10 @@
         </div>
       </div>
     </nav>
-
-    <div class="container">
+    <div class="container container-fluid w-100">
+      <h1 class="title">{{ self.title() }}</h1>
+    </div>
+    <div class="container container-fluid w-100">
       {% with messages = get_flashed_messages() %}
         {% if messages %}
           <ul class=flashes>

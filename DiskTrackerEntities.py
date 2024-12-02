@@ -34,7 +34,7 @@ class Volume(Base):
     volume_name: Mapped[str] = mapped_column(Text, unique=True)
     volume_model: Mapped[Optional[str]] = mapped_column(Text)
     volume_serial: Mapped[Optional[str]] = mapped_column(Text)
-    volume_capacity: Mapped[Optional[int]] = mapped_column(Integer)
+    volume_capacity: Mapped[Optional[int]] = mapped_column(Integer, info={'min': 0})
     volume_use: Mapped[Optional[str]] = mapped_column(Text)
 
 

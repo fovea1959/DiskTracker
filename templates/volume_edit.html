@@ -1,16 +1,7 @@
 {% extends 'base.html' %}
 
+{% block title %}Edit Volume{% endblock %}
+
 {% block content %}
-  <h1 class="title">{% block title %}Edit Volume{% endblock %}</h1>
-  {% from "_formhelpers.html" import render_field %}
-  <form method=post>
-    {{ render_field(form.volume_name) }}
-    <dl>
-      {{ render_field(form.volume_model) }}
-      {{ render_field(form.volume_serial) }}
-      {{ render_field(form.volume_capacity) }}
-      {{ render_field(form.volume_use) }}
-    </dl>
-    <input type=submit>
-  </form>
+  {% include "volume_form.html" %}
 {% endblock %}
