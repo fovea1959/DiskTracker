@@ -26,6 +26,16 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RESET_MODE" value="HARD" />
   </component>
+  <component name="GitRewordedCommitMessages">
+    <option name="commitMessagesMapping">
+      <RewordedCommitMessageMapping>
+        <option name="originalMessage" value="job add and edit working." />
+        <option name="rewordedMessage" value="job add and edit working." />
+      </RewordedCommitMessageMapping>
+    </option>
+    <option name="currentCommit" value="1" />
+    <option name="onto" value="93af71efbc676a5a705b4eb3fc1c769e9ef43b3c" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -352,7 +362,31 @@
       <option name="project" value="LOCAL" />
       <updated>1735135971566</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="job add and edit working.">
+      <option name="closed" value="true" />
+      <created>1735139058712</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1735139058712</updated>
+    </task>
+    <task id="LOCAL-00024" summary="job add and edit working.">
+      <option name="closed" value="true" />
+      <created>1735139069839</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1735139069839</updated>
+    </task>
+    <task id="LOCAL-00025" summary="job add and edit working.">
+      <option name="closed" value="true" />
+      <created>1735139077859</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1735139077859</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -383,6 +417,7 @@
     <MESSAGE value="rework how title works. work on volume editing." />
     <MESSAGE value="Can add volumes!" />
     <MESSAGE value="can edit sources, show job details." />
-    <option name="LAST_COMMIT_MESSAGE" value="can edit sources, show job details." />
+    <MESSAGE value="job add and edit working." />
+    <option name="LAST_COMMIT_MESSAGE" value="job add and edit working." />
   </component>
 </project>

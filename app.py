@@ -11,8 +11,8 @@ from werkzeug.datastructures import MultiDict
 from wtforms import Form, validators
 from wtforms.fields.numeric import IntegerField
 from wtforms.fields.simple import PasswordField, BooleanField, StringField, HiddenField
-from wtforms_alchemy import ModelForm
-from wtforms_components import DateTimeField, DateRange
+from wtforms_alchemy import ModelForm, ModelFormField
+from wtforms_components import DateTimeField, DateRange, SelectField
 
 import DiskTrackerDao as Dao
 import DiskTrackerEntities as E
@@ -60,6 +60,11 @@ class MyModelForm(ModelForm):
         return get_db_session()
 
 
+def populate_volume_pulldown(session: Session = None, pulldown: SelectField = None):
+    choices = [(v.volume_id, v.volume_name) for v in session.query(E.Volume).all()]
+    pulldown.choices = choices
+
+
 @app.route('/')
 def index():
     return redirect(url_for('volumes'))
@@ -81,10 +86,17 @@ def job(job_id):
     return render_template("job.html", job_data=data)
 
 
+class JobSourceForm(MyModelForm):
+    class Meta:
+        model = E.Source
+
+
 class JobForm(MyModelForm):
     class Meta:
         model = E.Job
         only = ['job_description', 'job_tool']
+
+    source_field = ModelFormField(JobSourceForm)
 
 
 @app.route('/job_add/', methods=['GET', 'POST'])
@@ -98,7 +110,7 @@ def job_add():
             flash(f'{v.job_name} saved!')
             return redirect(url_for('jobs'))
         else:
-            pass
+            flash(f'Flunked validation!')
     else:  # GET
         form = VolumeForm()
     return render_template('job_add.html', form=form)
@@ -117,7 +129,6 @@ def job_edit(job_id):
             return redirect(url_for('jobs'))
         else:
             logging.warning('flunked job_edit validation')
-            pass
     else:  # GET
         form = JobForm(obj=v)
         logging.info("made Job form: %r", form)
@@ -159,24 +170,50 @@ def source(source_id):
 class SourceForm(MyModelForm):
     class Meta:
         model = E.Source
+        only = ['source_directory', 'source_description']
+
+    source_volume_pulldown = SelectField('Volume', coerce=int)
+
+
+def source_add_or_edit(source_id: int = None, template: str = None):
+    s = get_db_session()
+    if request.method == 'POST':
+        if source_id is not None:
+            v = Dao.source_by_id(s, source_id)
+            # https://wtforms-alchemy.readthedocs.io/en/latest/validators.html#using-unique-validator-with-existing-objects
+            form = SourceForm(request.form, obj=v)
+        else:
+            v = E.Source()
+            form = SourceForm(request.form)
+        populate_volume_pulldown(s, form.source_volume_pulldown)
+        if form.validate():
+            form.populate_obj(v)
+            v.source_volume_id = form.source_volume_pulldown.data
+            s.add(v)
+            s.commit()
+            flash(f'{v.path} saved!')
+            return redirect(url_for('sources'))
+        else:
+            flash(f'Flunked validation!')
+    else:  # GET
+        if source_id is not None:
+            v = Dao.source_by_id(s, source_id)
+            form = SourceForm(obj=v)
+            form.source_volume_pulldown.data = v.source_volume_id
+        else:
+            form = SourceForm()
+        populate_volume_pulldown(s, form.source_volume_pulldown)
+    return render_template(template, form=form)
+
+
+@app.route('/source_add/', methods=['GET', 'POST'])
+def source_add():
+    return source_add_or_edit(source_id=None, template="source_add.html")
 
 
 @app.route('/source_edit/<int:source_id>/', methods=['GET', 'POST'])
 def source_edit(source_id):
-    s = get_db_session()
-    v = Dao.source_by_id(s, source_id)
-    if request.method == 'POST':
-        # https://wtforms-alchemy.readthedocs.io/en/latest/validators.html#using-unique-validator-with-existing-objects
-        form = SourceForm(request.form, obj=v)
-        if form.validate():
-            form.populate_obj(v)
-            flash(f'{v.source_volume} saved!')
-            return redirect(url_for('sources'))
-        else:
-            pass
-    else:  # GET
-        form = SourceForm(obj=v)
-    return render_template('source_edit.html', form=form)
+    return source_add_or_edit(source_id=source_id, template="source_edit.html")
 
 
 @app.route('/volumes/')
@@ -210,7 +247,7 @@ def volume_add():
             flash(f'{v.volume_name} saved!')
             return redirect(url_for('volumes'))
         else:
-            pass
+            flash(f'Flunked validation!')
     else:  # GET
         form = VolumeForm()
     return render_template('volume_add.html', form=form)
@@ -225,10 +262,10 @@ def volume_edit(volume_id):
         form = VolumeForm(request.form, obj=v)
         if form.validate():
             form.populate_obj(v)
-            flash('Saved!')
+            flash(f'{v.volume_name} saved!')
             return redirect(url_for('volumes'))
         else:
-            pass
+            flash(f'Flunked validation!')
     else:  # GET
         form = VolumeForm(obj=v)
         logging.info("made Volume form: %r", form)

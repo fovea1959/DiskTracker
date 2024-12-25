@@ -1,5 +1,7 @@
   {% from "_formhelpers.html" import render_field %}
   <form method=post>
+    {{ render_field(form.source_volume_pulldown, class_ = "form-control") }}
     {{ render_field(form.source_directory, class_ = "form-control") }}
+    {{ render_field(form.source_description, class_ = "form-control") }}
     <input type=submit>
   </form>
