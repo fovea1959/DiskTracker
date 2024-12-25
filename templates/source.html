@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Source {{ source_data.source.path }} {{ source_data.source.source_description }}{% endblock %}
+
+{% block content %}
+  {% set source=source_data.source %}
+  <div>
+    <dl>
+      <dt>Path:</dt>
+      <dd>{{ source.path|default("", True) }}</dd>
+      <dt>Description:</dt>
+      <dd>{{ source.source_description|default("", True) }}</dd>
+    </dl>
+  </div>
+  <div>
+    <a href="/source_edit/{{ source.source_id }}">Edit</a>
+  </div>
+{% endblock %}

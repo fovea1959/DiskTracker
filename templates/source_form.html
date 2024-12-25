@@ -1,0 +1,5 @@
+  {% from "_formhelpers.html" import render_field %}
+  <form method=post>
+    {{ render_field(form.source_directory, class_ = "form-control") }}
+    <input type=submit>
+  </form>

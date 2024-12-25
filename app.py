@@ -107,8 +107,33 @@ def sources():
 
 @app.route('/source/<int:source_id>/')
 def source(source_id):
-    data = G(source=Dao.source_by_id(get_db_session(), source_id))
+    source = Dao.source_by_id(get_db_session(), source_id)
+    logging.info(f"source id = {source_id}, path = {source.path}")
+    data = G(source=source)
     return render_template('source.html', source_data=data)
+
+
+class SourceForm(MyModelForm):
+    class Meta:
+        model = E.Source
+
+
+@app.route('/source_edit/<int:source_id>/', methods=['GET', 'POST'])
+def source_edit(source_id):
+    s = get_db_session()
+    v = Dao.source_by_id(s, source_id)
+    if request.method == 'POST':
+        # https://wtforms-alchemy.readthedocs.io/en/latest/validators.html#using-unique-validator-with-existing-objects
+        form = SourceForm(request.form, obj=v)
+        if form.validate():
+            form.populate_obj(v)
+            flash(f'{zed} saved!')
+            return redirect(url_for('sources'))
+        else:
+            pass
+    else:  # GET
+        form = SourceForm(obj=v)
+    return render_template('source_edit.html', form=form)
 
 
 @app.route('/volumes/')

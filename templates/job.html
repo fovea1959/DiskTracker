@@ -18,13 +18,13 @@
         <td>Sources</td>
         <td>
           {% for source in job.sources %}
-            <div>{{ source.path() }}</div>
+            <div>{{ source.path }}</div>
           {% endfor %}
         </td>
       </tr>
       <tr>
         <td>Destination</td>
-        <td>{{ job.destination.path() }}</td>
+        <td>{{ job.destination.path }}</td>
       </tr>
     </tbody>
   </table>
