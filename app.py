@@ -81,6 +81,49 @@ def job(job_id):
     return render_template("job.html", job_data=data)
 
 
+class JobForm(MyModelForm):
+    class Meta:
+        model = E.Job
+        only = ['job_description', 'job_tool']
+
+
+@app.route('/job_add/', methods=['GET', 'POST'])
+def job_add():
+    if request.method == 'POST':
+        form = JobForm(request.form)
+        if form.validate():
+            v = E.Job()
+            form.populate_obj(v)
+            get_db_session().add(v)
+            flash(f'{v.job_name} saved!')
+            return redirect(url_for('jobs'))
+        else:
+            pass
+    else:  # GET
+        form = VolumeForm()
+    return render_template('job_add.html', form=form)
+
+
+@app.route('/job_edit/<int:job_id>/', methods=['GET', 'POST'])
+def job_edit(job_id):
+    s = get_db_session()
+    v = Dao.job_by_id(s, job_id)
+    if request.method == 'POST':
+        # https://wtforms-alchemy.readthedocs.io/en/latest/validators.html#using-unique-validator-with-existing-objects
+        form = JobForm(request.form, obj=v)
+        if form.validate():
+            form.populate_obj(v)
+            flash('Saved!')
+            return redirect(url_for('jobs'))
+        else:
+            logging.warning('flunked job_edit validation')
+            pass
+    else:  # GET
+        form = JobForm(obj=v)
+        logging.info("made Job form: %r", form)
+    return render_template('job_edit.html', form=form)
+
+
 @app.route('/destinations/')
 def destinations():
     data = []
@@ -127,7 +170,7 @@ def source_edit(source_id):
         form = SourceForm(request.form, obj=v)
         if form.validate():
             form.populate_obj(v)
-            flash(f'{zed} saved!')
+            flash(f'{v.source_volume} saved!')
             return redirect(url_for('sources'))
         else:
             pass
